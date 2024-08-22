@@ -1,63 +1,63 @@
-const listaTarefas = new LinkedList();
+const listaDeTarefas = new LinkedList();
 
-function adicionarItem() {
-  const descricaoTarefa = document.getElementById("txtnovaTarefa").value.trim();
-  const prioridadeTarefa = document.getElementById("txtnovaPrioridade").value.trim();
-  const itemTarefa = new Tarefa(
-    descricaoTarefa,
-    prioridadeTarefa,
+function adicionarTarefa() {
+  const descricao = document.getElementById("txtnovaTarefa").value.trim();
+  const prioridade = document.getElementById("txtnovaPrioridade").value.trim();
+  const novaTarefa = new Tarefa(
+    descricao,
+    prioridade,
     obterDataAtual(),
     obterHoraAtual()
   );
   
-  listaTarefas.addElemento(itemTarefa);
-  console.log(listaTarefas.toString());
+  listaDeTarefas.addElemento(novaTarefa);
+  console.log(listaDeTarefas.toString());
   document.getElementById("txtnovaTarefa").value = "";
   document.getElementById("txtnovaPrioridade").value = "";
   document.getElementById("txtnovaTarefa").focus();
-  atualizarLista();
+  atualizarListaTarefas();
 }
 
-function concluirItem() {
-  const itemRemovido = listaTarefas.removeElemento();
-  if (itemRemovido != null) {
-    mostrarMensagemRemocao(itemRemovido);
-    atualizarLista();
+function removerTarefa() {
+  const tarefaRemovida = listaDeTarefas.removeElemento();
+  if (tarefaRemovida != null) {
+    exibirMensagemRemocao(tarefaRemovida);
+    atualizarListaTarefas();
   } else {
     const mensagemRemocao = document.getElementById("mensagem-remocao");
     mensagemRemocao.innerHTML = "Você não possui nenhuma tarefa para remover.";
   }
 }
 
-function exibirItemMaisAntigo() {
+function exibirTarefaMaisAntiga() {
   const mensagemRemocao = document.getElementById("mensagem-remocao");
-  if (!listaTarefas.isEmpty()) {
-    let itemMaisAntigo = listaTarefas.head.dado;
-    for (const item of listaTarefas) {
-      itemMaisAntigo = comparaTarefasDataHora(itemMaisAntigo, item);
+  if (!listaDeTarefas.isEmpty()) {
+    let tarefaMaisAntiga = listaDeTarefas.head.dado;
+    for (const tarefa of listaDeTarefas) {
+      tarefaMaisAntiga = compararTarefasDataHora(tarefaMaisAntiga, tarefa);
     }
-    mensagemRemocao.innerHTML = `A tarefa mais antiga é: ${itemMaisAntigo._descricao}, ${itemMaisAntigo._data}, ${itemMaisAntigo._hora}`;
+    mensagemRemocao.innerHTML = `A tarefa mais antiga é: ${tarefaMaisAntiga._descricao}, ${tarefaMaisAntiga._data}, ${tarefaMaisAntiga._hora}`;
   } else {
     mensagemRemocao.innerHTML = "A Lista está Vazia.";
   }
   mensagemRemocao.style.display = "block";
 }
 
-function exibirItemInicio() {
+function exibirPrimeiraTarefa() {
   const mensagemRemocao = document.getElementById("mensagem-remocao");
-  if (!listaTarefas.isEmpty()) {
-    let itemInicio = listaTarefas.head.dado;
-    mensagemRemocao.innerHTML = `A tarefa do início é: ${itemInicio._descricao}, ${itemInicio._prioridade}, ${itemInicio._data}, ${itemInicio._hora}`;
+  if (!listaDeTarefas.isEmpty()) {
+    let primeiraTarefa = listaDeTarefas.head.dado;
+    mensagemRemocao.innerHTML = `A primeira tarefa é: ${primeiraTarefa._descricao}, ${primeiraTarefa._prioridade}, ${primeiraTarefa._data}, ${primeiraTarefa._hora}`;
   } else {
     mensagemRemocao.innerHTML = "A Lista está Vazia.";
   }
   mensagemRemocao.style.display = "block";
 }
 
-function mostrarMensagemRemocao(tarefaRealizada) {
+function exibirMensagemRemocao(tarefa) {
   const mensagem = document.getElementById("mensagem-remocao");
   const dataAtual = new Date();
-  const dataAtualFormatada = `${String(dataAtual.getDate()).padStart(
+  const dataFormatada = `${String(dataAtual.getDate()).padStart(
     2,
     "0"
   )}/${String(dataAtual.getMonth() + 1).padStart(
@@ -72,20 +72,20 @@ function mostrarMensagemRemocao(tarefaRealizada) {
     .toString()
     .padStart(2, "0")}:${dataAtual.getSeconds().toString().padStart(2, "0")}`;
   mensagem.innerHTML = `Tarefa: ${
-    tarefaRealizada.descricao
-  } realizada em ${calcularDiferencaDias(
-    tarefaRealizada._data,
-    dataAtualFormatada
-  )} e ${calcularDiferencaHoras(tarefaRealizada._hora, horaAtual)}.`;
+    tarefa.descricao
+  } realizada em ${calcularDifDias(
+    tarefa._data,
+    dataFormatada
+  )} e ${calcularDifHoras(tarefa._hora, horaAtual)}.`;
   mensagem.style.display = "block";
 }
 
-function atualizarLista() {
+function atualizarListaTarefas() {
   const listaHtml = document.getElementById("list_listadeTarefas");
   listaHtml.innerHTML = "";
-  console.log(listaTarefas)
-  if (!listaTarefas.isEmpty()) {
-    for (const tarefa of listaTarefas) {
+  console.log(listaDeTarefas);
+  if (!listaDeTarefas.isEmpty()) {
+    for (const tarefa of listaDeTarefas) {
       const novaLinha = document.createElement("li");
       novaLinha.innerHTML = tarefa.toString();
       listaHtml.appendChild(novaLinha);
@@ -114,7 +114,7 @@ function obterHoraAtual() {
   return `${hora}:${minuto}:${segundo}`;
 }
 
-function calcularDiferencaHoras(hora1, hora2) {
+function calcularDifHoras(hora1, hora2) {
   const [h1, m1, s1] = hora1.split(":").map(Number);
   const [h2, m2, s2] = hora2.split(":").map(Number);
   const diferencaSegundos =
@@ -129,7 +129,7 @@ function calcularDiferencaHoras(hora1, hora2) {
     .padStart(2, "0")} [horas:minutos:segundos]`;
 }
 
-function calcularDiferencaDias(dataInicial, dataFinal) {
+function calcularDifDias(dataInicial, dataFinal) {
   const msPorDia = 24 * 60 * 60 * 1000;
   const [diaIni, mesIni, anoIni] = dataInicial.split("/").map(Number);
   const [diaFim, mesFim, anoFim] = dataFinal.split("/").map(Number);
@@ -140,7 +140,7 @@ function calcularDiferencaDias(dataInicial, dataFinal) {
   return diferencaDias + " dias";
 }
 
-function converterDataFormatoISO8601(data) {
+function formatarDataISO(data) {
   const partes = data.split("/");
   const dia = partes[0].padStart(2, "0");
   const mes = partes[1].padStart(2, "0");
@@ -148,24 +148,24 @@ function converterDataFormatoISO8601(data) {
   return `${ano}-${mes}-${dia}`;
 }
 
-function comparaTarefasDataHora(tarefa1, tarefa2) {
-  const dataHoraTarefa1 = new Date(
-    `${converterDataFormatoISO8601(tarefa1._data)}T${tarefa1._hora}`
+function compararTarefasDataHora(tarefa1, tarefa2) {
+  const dataHora1 = new Date(
+    `${formatarDataISO(tarefa1._data)}T${tarefa1._hora}`
   );
-  const dataHoraTarefa2 = new Date(
-    `${converterDataFormatoISO8601(tarefa2._data)}T${tarefa2._hora}`
+  const dataHora2 = new Date(
+    `${formatarDataISO(tarefa2._data)}T${tarefa2._hora}`
   );
-  if (dataHoraTarefa1.getTime() < dataHoraTarefa2.getTime()) {
+  if (dataHora1.getTime() < dataHora2.getTime()) {
     return tarefa1;
   } else {
     return tarefa2;
   }
 }
 
-function saveLinkedListToLocalStorage() {
-  console.log("saveLinkedListToLocalStorage");
+function salvarListaLocalStorage() {
+  console.log("salvarListaLocalStorage");
   let listaParaSalvar = [];
-  for (const item of minhaLista) {
+  for (const item of listaDeTarefas) {
     listaParaSalvar.push({
       _descricao: item.descricao,
       _prioridade: item.prioridade,
@@ -176,27 +176,27 @@ function saveLinkedListToLocalStorage() {
   }
   let jsonStr = JSON.stringify(listaParaSalvar);
   console.log(jsonStr);
-  localStorage.setItem("myLinkedList", jsonStr);
+  localStorage.setItem("listaTarefas", jsonStr);
   alert("Lista salva com sucesso!");
 }
 
-function loadLinkedListFromLocalStorage() {
-  console.log("loadLinkedListFromLocalStorage");
-  let jsonStr = localStorage.getItem("myLinkedList");
+function carregarListaLocalStorage() {
+  console.log("carregarListaLocalStorage");
+  let jsonStr = localStorage.getItem("listaTarefas");
   if (jsonStr) {
     let listaCarregada = JSON.parse(jsonStr);
     for (let i = 0; i < listaCarregada.length; i++) {
       let obj = listaCarregada[i];
-      let novaTarefa = new Tarefa(
+      let tarefaCarregada = new Tarefa(
         obj._descricao,
         obj._prioridade,
         obj._data,
         obj._hora
       );
-      console.log(novaTarefa.toString());
-      minhaLista.addLast(novaTarefa);
+      console.log(tarefaCarregada.toString());
+      listaDeTarefas.addLast(tarefaCarregada);
     }
-    atualizarLista();
+    atualizarListaTarefas();
     alert("Lista carregada com sucesso!");
   }
 }

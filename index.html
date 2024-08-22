@@ -43,16 +43,16 @@
         <input type="text" class="form-control" id="txtnovaPrioridade" />
       </div>
       <div class="mb-3">
-        <button class="btn btn-info me-2" onclick="adicionarItem()">
+        <button class="btn btn-info me-2" onclick="adicionarTarefa()">
           Adicionar Tarefa
         </button>
-        <button class="btn btn-danger me-2" onclick="concluirItem()">
+        <button class="btn btn-danger me-2" onclick="removerTarefa()">
           Resolver Tarefa
         </button>
-        <button class="btn btn-danger me-2" onclick="exibirItemInicio()">
+        <button class="btn btn-danger me-2" onclick="exibirPrimeiraTarefa()">
           Tarefa do início
         </button>
-        <button class="btn btn-danger" onclick="exibirItemMaisAntigo()">
+        <button class="btn btn-danger" onclick="exibirTarefaMaisAntiga()">
           Tarefa mais antiga
         </button>
 
@@ -60,13 +60,13 @@
       <div class="mb-3">
         <button
           class="btn btn-success me-2"
-          onclick="saveLinkedListToLocalStorage()"
+          onclick="salvarListaLocalStorage()"
         >
           Salvar Lista
         </button>
         <button
           class="btn btn-success"
-          onclick="loadLinkedListFromLocalStorage()"
+          onclick="carregarListaLocalStorage()"
         >
           Carregar Lista
         </button>
